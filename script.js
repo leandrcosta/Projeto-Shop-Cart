@@ -1,3 +1,5 @@
+const sectionProduct = document.querySelector('.items'); // section responsavél pelos items;
+
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -24,6 +26,20 @@ const createProductItemElement = ({ sku, name, image }) => {
   return section;
 };
 
+// Retornar os produtos vindos da API do Mercado Livre:
+const getProductoApi = async () => {
+  const apiProduct = await fetchProducts('computador');
+  const { results } = apiProduct; // array de obj com o retorno da api para 'computador'
+  results.forEach(({ id, title, thumbnail }) => {
+    const productObject = {
+      sku: id,
+      name: title,
+      image: thumbnail,
+    };
+    sectionProduct.appendChild(createProductItemElement(productObject));
+  });
+};
+
 const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
 const cartItemClickListener = (event) => {
@@ -38,4 +54,6 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-window.onload = () => { };
+window.onload = () => { 
+  getProductoApi();
+};
