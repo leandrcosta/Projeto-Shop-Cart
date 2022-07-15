@@ -1,4 +1,5 @@
 const sectionProduct = document.querySelector('.items'); // section responsavél pelos items;
+const listCart = document.querySelector('.cart__items');
 
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
@@ -30,20 +31,21 @@ const createProductItemElement = ({ sku, name, image }) => {
 const getProductoApi = async () => {
   const apiProduct = await fetchProducts('computador');
   const { results } = apiProduct; // array de obj com o retorno da api para 'computador'
-  results.forEach(({ id, title, thumbnail }) => {
+  results.forEach((element) => {
     const productObject = {
-      sku: id,
-      name: title,
-      image: thumbnail,
+      sku: element.id,
+      name: element.title,
+      image: element.thumbnail,
     };
     sectionProduct.appendChild(createProductItemElement(productObject));
   });
 };
 
-const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
+/* const getSkuFromProductItem = () => document.querySelector('span.item__sku').innerText; */
 
-const cartItemClickListener = (event) => {
-  // coloque seu código aqui
+// Remove item do carrinho
+const cartItemClickListener = (event) => { // requisito 5
+  listCart.removeChild(event.target); // removendo filho do elemento 'Pai'
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -54,6 +56,41 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
+// As duas funções ( addProductTocart ) abaixo eu tive ajuda do colega Victor Matias. Que me ajudou a vizualizar o motivo de não estar funcionando.
+
+// Outra maneira de resolver a questão 4.
+const addProducTocart = async (event) => {
+  const clicked = event.target.parentElement.firstChild.innerText;
+  const carItems = await fetchItem(clicked);
+  const { id, title, price } = carItems;
+  listCart.appendChild(createCartItemElement({
+    sku: id,
+    name: title,
+    salePrice: price,
+ }));
+};
+
+// Adicionado itens ao carrinho
+/* const addProducTocart = async () => {
+  const cartItems = getSkuFromProductItem(); // retorna o id do produto que ser ausado em fechItem
+  const clicked = await fetchItem(cartItems);
+  const { id, title, price } = clicked;
+  listCart.appendChild(createCartItemElement({
+    sku: id,
+    name: title,
+    salePrice: price,
+ }));
+}; */
+
+// Btão de click pra adicionar produtos no carrinho.
+ const buttonAddCar = () => {
+  const addButtons = document.querySelectorAll('.item__add');
+  addButtons.forEach((button) => button.addEventListener('click', addProducTocart));
+  return addButtons;
+};
+
 window.onload = () => { 
-  getProductoApi();
+  getProductoApi().then(() => {
+    buttonAddCar();
+  });
 };
