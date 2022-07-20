@@ -1,5 +1,5 @@
 const sectionProduct = document.querySelector('.items'); // section responsavél pelos items;
-const listCart = document.querySelector('.cart__items'); // ol repnsavel pelos items do carrinho;
+const listCart = document.querySelector('.cart__items'); // ol repnsavel pelos items d carrinho;
 const emptyCar = document.querySelector('.empty-cart'); // Btn esvaziar carrinho;
 
 const createProductImageElement = (imageSource) => {
@@ -28,16 +28,17 @@ const createProductItemElement = ({ sku, name, image }) => {
   return section;
 };
 
-/* const mensagemLoadingApi = () => {
+const mensagemLoadingApi = () => {
   const msgLoading = document.createElement('p');
-  msgLoading.className('loading');
+  msgLoading.className = 'loading';
   msgLoading.innerText = 'carregando...';
   sectionProduct.appendChild(msgLoading);
-}; */
-/* const removeMessage = () => document.querySelector('.loading').remove(); */
+};
+const removeMessage = () => document.querySelector('.loading').remove();
 
 // Retornar os produtos vindos da API do Mercado Livre:
 const getProductoApi = async () => {
+  mensagemLoadingApi();
   const apiProduct = await fetchProducts('computador');
   const { results } = apiProduct; // array de obj com o retorno da api para 'computador'
   results.forEach((element) => {
@@ -48,6 +49,7 @@ const getProductoApi = async () => {
     };
     sectionProduct.appendChild(createProductItemElement(productObject));
   });
+  removeMessage();
 };
 
 /* const getSkuFromProductItem = () => document.querySelector('span.item__sku').innerText; */
