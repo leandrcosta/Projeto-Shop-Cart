@@ -27,7 +27,7 @@ const createProductItemElement = ({ sku, name, image }) => {
 
   return section;
 };
-
+// Requisito feito com ajuda da Debora, que me audou a ver onde estava o erro (20/07)
 const mensagemLoadingApi = () => {
   const msgLoading = document.createElement('p');
   msgLoading.className = 'loading';
