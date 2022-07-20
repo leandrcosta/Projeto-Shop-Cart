@@ -1,5 +1,6 @@
 const sectionProduct = document.querySelector('.items'); // section responsavél pelos items;
-const listCart = document.querySelector('.cart__items');
+const listCart = document.querySelector('.cart__items'); // ol repnsavel pelos items do carrinho;
+const emptyCar = document.querySelector('.empty-cart'); // Btn esvaziar carrinho;
 
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
@@ -27,6 +28,14 @@ const createProductItemElement = ({ sku, name, image }) => {
   return section;
 };
 
+/* const mensagemLoadingApi = () => {
+  const msgLoading = document.createElement('p');
+  msgLoading.className('loading');
+  msgLoading.innerText = 'carregando...';
+  sectionProduct.appendChild(msgLoading);
+}; */
+/* const removeMessage = () => document.querySelector('.loading').remove(); */
+
 // Retornar os produtos vindos da API do Mercado Livre:
 const getProductoApi = async () => {
   const apiProduct = await fetchProducts('computador');
@@ -46,6 +55,19 @@ const getProductoApi = async () => {
 // Remove item do carrinho
 const cartItemClickListener = (event) => { // requisito 5
   listCart.removeChild(event.target); // removendo filho do elemento 'Pai'
+  saveCartItems(listCart.innerHTML);
+};
+// remove itens salvos
+const removeItemSaved = () => {
+  const ItemSavedCar = listCart.childNodes; // Retorna Nodelist com os nós filhos 
+  ItemSavedCar.forEach((element) => element.addEventListener('click', cartItemClickListener));
+};
+
+// Remove Todos os items:
+const removAllItems = () => {
+  emptyCar.addEventListener('click', () => {
+    listCart.innerHTML = '';
+  });
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -59,8 +81,8 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
 // As duas funções ( addProductTocart ) abaixo eu tive ajuda do colega Victor Matias. Que me ajudou a vizualizar o motivo de não estar funcionando.
 
 // Outra maneira de resolver a questão 4.
-const addProducTocart = async (event) => {
-  const clicked = event.target.parentElement.firstChild.innerText;
+const addProducTocart = async ({ target }) => {
+  const clicked = target.parentElement.firstChild.innerText;
   const carItems = await fetchItem(clicked);
   const { id, title, price } = carItems;
   listCart.appendChild(createCartItemElement({
@@ -68,6 +90,7 @@ const addProducTocart = async (event) => {
     name: title,
     salePrice: price,
  }));
+ saveCartItems(listCart.innerHTML);
 };
 
 // Adicionado itens ao carrinho
@@ -89,8 +112,11 @@ const addProducTocart = async (event) => {
   return addButtons;
 };
 
-window.onload = () => { 
+window.onload = () => {
   getProductoApi().then(() => {
     buttonAddCar();
   });
-};
+  listCart.innerHTML = getSavedCartItems();
+  removeItemSaved();
+  removAllItems();
+}; 
