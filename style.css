@@ -125,6 +125,7 @@ body {
   margin: 0;
   padding: 10px;
   color: white;
+  border-radius: 5px;
 }
 
 .cart {
@@ -146,5 +147,11 @@ body {
   margin: 0 auto;
   border: 2px solid rgb(5, 52, 219);
   background-color: rgb(249, 249, 246);
+}
+
+.loading{
+  text-align: center;
+  font-size: 20px;
+  
 }
 
